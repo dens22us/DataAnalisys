@@ -1,1 +1,13 @@
-
+select 
+user_pseudo_id,
+case when event_name = 'page_view' then 1 else 0 end as page_view  ,
+case when event_name = 'view_item' then 1 else 0 end as view_item ,
+case when event_name = 'add_to_cart' then 1 else 0 end as add_to_cart,
+case when event_name = 'purchase' then 1 else 0 end as purchase,
+sum(case when event_name = 'purchase' then 1 else 0 end) over (),
+--item_name,
+--event_name
+from `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+where (_TABLE_SUFFIX BETWEEN '20200101' AND '20201230')
+and event_name in ('page_view','view_item','add_to_cart','purchase')
+limit 10000;
